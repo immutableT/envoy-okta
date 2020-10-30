@@ -24,7 +24,31 @@ static_resources:
               - match: { prefix: "/" }
                 route: { cluster: some_service }
           http_filters:
+          - name: envoy.filters.http.oauth2
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.oauth2.v3alpha.OAuth2 
+              config:
+                token_endpoint:
+                  cluster: some_service
+                  uri: "dev-4110973.okta.com/oauth2/default/v1/token"
+                  timeout: 3s
+                authorization_endpoint: https://dev-4110973.okta.com/oauth2/default/v1/authorize
+                redirect_uri: "%REQ(:x-forwarded-proto)%://%REQ(:authority)%/callback"
+                redirect_path_matcher:
+                  path:
+                    exact: /callback
+                signout_path:
+                  path:
+                    exact: /signout
+                credentials:
+                  client_id: foo
+                  token_secret:
+                    name: token
+                    sds_config:
+                      path: "secret.yaml"
+
           - name: envoy.filters.http.router
+          
 
   clusters:
   - name: some_service
