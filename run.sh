@@ -1,0 +1,1 @@
+envoy -c config.yaml

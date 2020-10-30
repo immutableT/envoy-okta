@@ -1,0 +1,1 @@
+openssl req -x509 -newkey rsa:2048 -keyout web-key.pem -out  web-crt.pem -days 3650 -nodes -subj '/CN=localhost'
